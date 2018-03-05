@@ -11,18 +11,29 @@ from window_reservoir_sampling_edges import reservoir_sampling_window_stream
 import math
 import csv
 import datetime
+from config import TwitterAuth
 
 # Get date
 now = datetime.datetime.now()
 
 # Reservoir Sampling Size
-window_k = 400
-window_sliding = int(1800000)
+
+window_k = input("Please enter window reservoir size (eg 200) : ")
+window_k = int(window_k)
+
+window_sliding = input("Please enter window sliding in minutes(eg 10) : ")
+window_sliding = int(window_sliding*60)*1000
+
+export_time = input("Please enter export window reservoir time in minutes  (eg 2) : ")
+export_time = int(export_time*60)*1000
 
 # Target Twitter Stream
-tracking = ["bitcoin"]
-languages = ["en"] # fr
+tracking = []
+tracking.append(input("Please enter tracking word (eg CNN) : "))
+print(tracking)
+#tracking = ["bitcoin"]
 window_counter = 0
+
 c = csv.writer(open("data/%s_%s_edges_full.csv" % (now.strftime("%Y_%m_%d"), tracking[0]), "a"))
 csv_header_full = ("Source", "Target", "Timestamp")
 c.writerow(csv_header_full)
@@ -54,16 +65,15 @@ class StdOutListener(StreamListener):
 				else:
 					c.writerow(edge)
 					window_reservoir_sampling = reservoir_sampling_window_stream(edge, window_k, window_sliding)
-					print(window_reservoir_sampling)
+					#print(window_reservoir_sampling)
 
 		except:
 			pass
 		try:
 			millis = round(time.time() * 1000)
+			global initial_time
 			if millis > initial_time:
-				print("15min")
-				new_time = int(millis)+int(1)
-				global initial_time
+				new_time = int(millis)+export_time
 				initial_time = new_time
 				global window_counter
 				t = csv.writer(open("data/%s_%s_window_reservoir_edges_%s.csv" % (now.strftime("%Y_%m_%d"), tracking[0], window_counter), "a"))
@@ -92,7 +102,7 @@ if __name__ == '__main__':
 			auth = OAuthHandler(consumer_key, consumer_secret)
 			auth.set_access_token(access_token, access_token_secret)
 			twitterStream = Stream(auth, l)
-			twitterStream.filter(track=tracking, languages=languages, stall_warnings=True)
+			twitterStream.filter(track=tracking, stall_warnings=True)
 
 		except KeyboardInterrupt:
 			#User pressed ctrl+c or cmd+c -- get ready to exit the program
