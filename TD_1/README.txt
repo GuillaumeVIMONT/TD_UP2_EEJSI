@@ -6,7 +6,7 @@ _  /   __ |/ |/ /_  / / /_ / /_ /  __/  /
 
 This is a basic experience to explain reservoir sampling with social edges.
 
-Into the folder you have a data file with 100 edges from a twitter capture on CNN.
+Into the folder you have a data file with 100 edges and another one with 390 000 edges from a twitter capture on CNN.
 
 Reminder : 
 
@@ -15,7 +15,7 @@ Typically n is large enough that the list doesn't fit into main memory.
 
 This is an interactive python script, you need to specify 3 variables : 
 
-1- Input file (in this case data.csv)
+1- Input file (in this case data_100.csv)
 2- Reservoir sampling size
 3 - Output file ( as you like, with a .csv)
 
