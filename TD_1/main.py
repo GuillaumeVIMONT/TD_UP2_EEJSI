@@ -41,7 +41,7 @@ def write_edge_reservoir(edge_reservoir):
 	for i in edge_reservoir:
 		a = str(i[0])
 		b = str(i[1])
-		e = a + ', ' + b
+		e = a + ',' + b
 		f.write(e +"\n")
 	f.close()
 		
