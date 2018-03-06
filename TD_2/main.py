@@ -22,28 +22,22 @@ window_k = input("Please enter window reservoir size (eg 200) : ")
 window_k = int(window_k)
 
 window_sliding = input("Please enter window sliding in minutes(eg 10) : ")
-window_sliding = int(window_sliding*60)*1000
+window_sliding = int(window_sliding)*60000
 
+global export_time
 export_time = input("Please enter export window reservoir time in minutes  (eg 2) : ")
-export_time = int(export_time*60)*1000
-
+export_time = int(export_time)*60000
 # Target Twitter Stream
 tracking = []
 tracking.append(input("Please enter tracking word (eg CNN) : "))
-print(tracking)
-#tracking = ["bitcoin"]
+
+print("Capture in progress")
+
 window_counter = 0
 
 c = csv.writer(open("data/%s_%s_edges_full.csv" % (now.strftime("%Y_%m_%d"), tracking[0]), "a"))
 csv_header_full = ("Source", "Target", "Timestamp")
 c.writerow(csv_header_full)
-
-
-#consumer key, consumer secret, access token, access secret for OAuth Twitter.
-consumer_key="MfKJZNJdN2cVM6Ka8xmF8Smbk"
-consumer_secret="KtpAZ0sK0HdpVphCryNWTlmWwnm97X3rovkrCwOOOtGbVL2Zfo"
-access_token="2207034565-3LYXBvDdzeDMXpmM4i3APZkG6qW6UGeTc8xQKHe"
-access_token_secret="3jyb0b9f5gGA8sTJbq2j5IWwDAEBC7G0EBMYvb8WIpONQ"
 
 global initial_time
 initial_time = 0
@@ -59,22 +53,21 @@ class StdOutListener(StreamListener):
 		try:
 			twitter_edges_graph = create_graph(data)
 			for edge in twitter_edges_graph:
-				if tracking[0] in edge[1].lower():
+				if tracking[0].lower() in edge[1].lower():
 					remove(edge)
 					pass
 				else:
 					c.writerow(edge)
 					window_reservoir_sampling = reservoir_sampling_window_stream(edge, window_k, window_sliding)
-					#print(window_reservoir_sampling)
 
 		except:
 			pass
 		try:
 			millis = round(time.time() * 1000)
 			global initial_time
+			global export_time
 			if millis > initial_time:
-				new_time = int(millis)+export_time
-				initial_time = new_time
+				initial_time = int(millis)+int(export_time)
 				global window_counter
 				t = csv.writer(open("data/%s_%s_window_reservoir_edges_%s.csv" % (now.strftime("%Y_%m_%d"), tracking[0], window_counter), "a"))
 				csv_header_window = ("Source", "Target", "Timestamp", "Window")
@@ -99,8 +92,8 @@ if __name__ == '__main__':
 	while True:
 		try:
 			l = StdOutListener()
-			auth = OAuthHandler(consumer_key, consumer_secret)
-			auth.set_access_token(access_token, access_token_secret)
+			auth = OAuthHandler(TwitterAuth.consumer_key, TwitterAuth.consumer_secret)
+			auth.set_access_token(TwitterAuth.access_token, TwitterAuth.access_token_secret)
 			twitterStream = Stream(auth, l)
 			twitterStream.filter(track=tracking, stall_warnings=True)
 
