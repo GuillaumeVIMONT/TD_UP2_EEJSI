@@ -19,7 +19,15 @@ We will be storing only the eligible elements in the memory.
 Therefore expected memory usage is O(log n), or O(k log n) for samples of size k.
 
 
+This is an interactive python script, you need to specify 3 variables : 
 
+1- Window reservoir size (eg 200)
+2- Window sliding in minutes (eg 10)
+3 - Window export edges in minutes (eg 2)
+4 - Traking word to capture twitter stream
+
+
+After running this program, you can run gephi to play with the network graph.
 
 
 
