@@ -10,3 +10,10 @@ Previously we experiment reservoir sampling, now we consider a stream of edges f
 
 Into a window sliding reservoir, data is considered to be expired after a certain time interval.
 “Sliding window” in essence is such a random sample of fixed size (say k) “moving” over the most recent elements in the data stream.
+
+Types of Sliding Window: Time-stamp based
+
+Windows of duration t consist of elements whose arrival timestamp is within a time interval  t of the current time. Example being Priority Sample for Sliding Window
+
+We will be storing only the eligible elements in the memory.
+Therefore expected memory usage is O(log n), or O(k log n) for samples of size k.
