@@ -13,7 +13,7 @@ Reminder :
 Reservoir sampling is a family of randomized algorithms for randomly choosing a sample of k items from a list S containing n items, where n is either a very large or unknown number. 
 Typically n is large enough that the list doesn't fit into main memory.
 
-This is an interactive python script to run this execute main.py, you need to specify 3 variables : 
+This is an interactive python script, to run this execute main.py you need to specify 3 variables : 
 
 1- Input file (in this case data_100.csv)
 2- Reservoir sampling size
