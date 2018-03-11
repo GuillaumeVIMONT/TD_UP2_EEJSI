@@ -50,18 +50,15 @@ class StdOutListener(StreamListener):
 
 	def on_data(self, data):
 		all_data = json.loads(data)
-		try:
-			twitter_edges_graph = create_graph(data)
+		if len(twitter_edges_graph) > 0:
 			for edge in twitter_edges_graph:
-				if tracking[0].lower() in edge[1].lower():
+				if tracking[0] in edge[1].lower():
 					remove(edge)
 					pass
 				else:
 					c.writerow(edge)
 					window_reservoir_sampling = reservoir_sampling_window_stream(edge, window_k, window_sliding)
-
-		except:
-			pass
+					print(window_reservoir_sampling)
 		try:
 			millis = round(time.time() * 1000)
 			global initial_time
