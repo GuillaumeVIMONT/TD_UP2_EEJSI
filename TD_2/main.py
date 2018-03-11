@@ -50,6 +50,7 @@ class StdOutListener(StreamListener):
 
 	def on_data(self, data):
 		all_data = json.loads(data)
+		twitter_edges_graph = create_graph(data)
 		if len(twitter_edges_graph) > 0:
 			for edge in twitter_edges_graph:
 				if tracking[0] in edge[1].lower():
