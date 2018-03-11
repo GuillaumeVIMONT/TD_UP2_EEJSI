@@ -60,7 +60,6 @@ class StdOutListener(StreamListener):
 					c.writerow(edge)
 					window_reservoir_sampling = reservoir_sampling_window_stream(edge, window_k, window_sliding)
 					print(window_reservoir_sampling)
-		try:
 			millis = round(time.time() * 1000)
 			global initial_time
 			global export_time
@@ -74,8 +73,6 @@ class StdOutListener(StreamListener):
 					for edge in i:
 						t.writerow(edge)
 				window_counter+=1
-		except:
-			pass
 		return True
 
 
