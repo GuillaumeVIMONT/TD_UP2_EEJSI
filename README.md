@@ -1,7 +1,7 @@
 # TD_UP2_EEJSI
 
 All ressources for the TD EEJSI are into this Repo 
-
+Direct download => https://github.com/GuillaumeVIMONT/TD_UP2_EEJSI/archive/master.zip
 
 ## About
 
