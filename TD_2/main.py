@@ -67,7 +67,7 @@ class StdOutListener(StreamListener):
 				initial_time = int(millis)+int(export_time)
 				global window_counter
 				t = csv.writer(open("data/%s_%s_window_reservoir_edges_%s.csv" % (now.strftime("%Y_%m_%d"), tracking[0], window_counter), "a"))
-				csv_header_window = ("Source", "Target", "Timestamp", "Window")
+				csv_header_window = ("Source", "Target", "Timestamp")
 				t.writerow(csv_header_window)
 				for i in window_reservoir_sampling:
 					for edge in i:
