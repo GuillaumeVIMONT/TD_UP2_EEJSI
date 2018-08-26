@@ -4,8 +4,6 @@ import datetime
 import time
 import csv
 from pathlib import Path
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 
 export_file = Path("bitcoin_export.csv")
 
