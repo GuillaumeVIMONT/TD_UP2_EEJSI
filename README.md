@@ -129,3 +129,10 @@ If all it’s ok, you need to have file data into the data folder
 After running this program, you can run gephi to play with the network graph.
 
 For more informations about Gephi, please read this page http://www.up2.fr/index.php?n=Main.Gephi
+
+
+## Part 3
+
+Please go to the folder "TD_3"
+
+This is a basic experience with Bitcoin API.
