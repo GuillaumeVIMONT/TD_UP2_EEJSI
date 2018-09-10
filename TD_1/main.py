@@ -10,8 +10,6 @@ k = int(k)
 file_output = input("Please enter output filename (e.g reservoir_output.csv ) : ")
 
 
-
-
 def read_edge_from_file(file_input):
 	with open(file_input) as csvfile:
 		edge_list = []
@@ -20,19 +18,6 @@ def read_edge_from_file(file_input):
 			edge = (row['Source'], row['Target'])
 			edge_list.append(edge)
 	return edge_list
-
-sample = []
-
-def reservoir_sampling(edge, k):
-    N = len(edge)
-    for (u,v) in enumerate([edge]):
-        if len(sample) < k:
-            sample.append(edge)
-        else:
-            j = random.randint(0, k)
-            if j < k:
-                sample[j] = edge
-    return sample
 
 def write_edge_reservoir(edge_reservoir):
 	f = open(file_output, "w")
@@ -44,11 +29,15 @@ def write_edge_reservoir(edge_reservoir):
 		e = a + ',' + b
 		f.write(e +"\n")
 	f.close()
-		
 
 edge_list = read_edge_from_file(file_input)
+sample = []
+for index, edge in enumerate(edge_list):
+    if index < k:
+        sample.append(edge)
+    else:
+        j = random.randint(0, index)
+        if j < k:
+           sample[j] = edge
 
-for i in edge_list:
-	reservoir = reservoir_sampling(i, k)
-
-write_edge_reservoir(reservoir)
+write_edge_reservoir(sample)
