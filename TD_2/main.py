@@ -12,25 +12,36 @@ import math
 import csv
 import datetime
 from config import TwitterAuth
+import sys
 
 # Get date
 now = datetime.datetime.now()
 
+print("Before start Twitter capture we need some informations")
 # Reservoir Sampling Size
-
-window_k = input("Please enter window reservoir size (eg 200) : ")
+window_k = input("1/5 Please enter number of edges in the reservoir (eg 200): ")
 window_k = int(window_k)
-
-window_sliding = input("Please enter window sliding in minutes(eg 10) : ")
+# Lamb size window reservoir
+window_sliding = input("2/5 Please enter lamb minutes(eg 10): ")
 window_sliding = int(window_sliding)*60000
 
+# tau size window reservoir
 global export_time
-export_time = input("Please enter export window reservoir time in minutes  (eg 2) : ")
+export_time = input("3/5 Please enter tau in minutes  (eg 2): ")
 export_time = int(export_time)*60000
-# Target Twitter Stream
+rate=int(window_sliding/export_time)
+if isinstance(rate, int):
+	pass
+else:
+	export_time = input("3/5 Your tau is not a multiple of lamb, please select a multiple of lamb: ")
+	export_time = int(export_time)*60000
+# tracking Twitter Stream
 tracking = []
-tracking.append(input("Please enter tracking word (eg CNN) : "))
-
+tracking.append(input("4/5 Please enter tracking word (eg CNN): "))
+# Timeout Twitter stream
+timeout = input("5/5 Please enter duration of the capture in minutes (eg 30): ")
+timeout = int(timeout)*60000
+start = int(round(time.time() * 1000))
 print("Capture in progress")
 
 window_counter = 0
@@ -49,6 +60,7 @@ class StdOutListener(StreamListener):
 	"""
 
 	def on_data(self, data):
+		global initial_time, window_k, window_sliding, export_time, window_counter
 		all_data = json.loads(data)
 		twitter_edges_graph = create_graph(data)
 		if len(twitter_edges_graph) > 0:
@@ -58,21 +70,9 @@ class StdOutListener(StreamListener):
 					pass
 				else:
 					c.writerow(edge)
-					window_reservoir_sampling = reservoir_sampling_window_stream(edge, window_k, window_sliding)
-					print(window_reservoir_sampling)
-			millis = round(time.time() * 1000)
-			global initial_time
-			global export_time
-			if millis > initial_time:
-				initial_time = int(millis)+int(export_time)
-				global window_counter
-				t = csv.writer(open("data/%s_%s_window_reservoir_edges_%s.csv" % (now.strftime("%Y_%m_%d"), tracking[0], window_counter), "a"))
-				csv_header_window = ("Source", "Target", "Timestamp")
-				t.writerow(csv_header_window)
-				for i in window_reservoir_sampling:
-					for edge in i:
-						t.writerow(edge)
-				window_counter+=1
+					window_reservoir_sampling = reservoir_sampling_window_stream(edge, window_k, window_sliding, export_time)
+		if time.time()*1000 > start + timeout:
+			sys.exit('Capture terminated')
 		return True
 
 
