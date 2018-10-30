@@ -2,7 +2,6 @@ import json
 import time
 
 def create_graph(data):
-	current_milli_time = lambda: int(round(time.time() * 1000))
 	edge_list = []
 	hashtags_list = []
 	user_mentions_list = []
