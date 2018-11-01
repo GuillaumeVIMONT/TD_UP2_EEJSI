@@ -2,7 +2,135 @@ import random
 import time
 import datetime
 import csv
+import os.path
+def diameter(first):
 
+ #first=comp1[i]
+ l=first[2]
+ a=l[0]
+#print("First point",a)
+ dc={}
+ dc[a]=0
+ for b in d[a]: 
+  if b in dc.keys(): pass
+  else: dc[b]=1
+  
+#Initialize S ans S1, Start iterating
+ S=d[a]
+ comp=[]
+ S1=set([a])
+ S=S.union(S1)
+#print("S=",S)
+ while S > S1:
+    S1=S
+    for u in S:
+       S=S.union(d[u])
+       for v in d[u]:
+         if v in dc.keys(): dc[v]=min(dc[v],dc[u]+1)
+         else: dc[v]=dc[u]+1
+ dist=list(dc.values())
+ ma=max(dist)
+ for a, i in dc.items():
+   if i==ma: last=a
+   
+# we keep last  !!  
+# do it again !!
+
+ a=last
+ dc={}
+ dc[a]=0
+ for b in d[a]: 
+  if b in dc.keys(): pass
+  else: dc[b]=1
+  
+#Initialize S ans S1, Start iterating
+ S=d[a]
+ comp=[]
+ S1=set([a])
+ S=S.union(S1)
+#print("S=",S)
+ while S > S1:
+    S1=S
+    for u in S:
+       S=S.union(d[u])
+       for v in d[u]:
+         if v in dc.keys(): dc[v]=min(dc[v],dc[u]+1)
+         else: dc[v]=dc[u]+1
+ dist=list(dc.values())
+ ma=max(dist)
+ for a, i in dc.items():
+   if i==ma: last=a
+ return(max(dist))
+
+def components(edges):
+  global d
+  d={}
+  n=0
+  for e in edges:
+     a=e[0]
+     b=e[1]
+     if a in d.keys(): d[a].add(b)
+     else: d[a]=set([b])
+     if b in d.keys(): d[b].add(a)
+     else: d[b]=set([a])
+     
+     
+  #print ("Dict=", d, len(d))
+  n=len(d)
+  m=0
+  #Breadth-first search from first point, first component
+  a=list(d.keys())[0]
+
+  #dc keeps b:i  if i is the length of the shortest path from a to b in the first component
+  dc={}
+  dc[a]=0
+  for b in d[a]: 
+    if b in dc.keys(): pass
+    else: dc[b]=1
+
+  #Initialize S ans S1, Start iterating
+  S=d[a]
+  comp=[]
+  S1=set([a])
+  S=S.union(S1)
+  #print("S=",S)
+  while S > S1:
+      S1=S
+      for u in S:
+         S=S.union(d[u])
+         for v in d[u]:
+           if v in dc.keys(): dc[v]=min(dc[v],dc[u]+1)
+           else: dc[v]=dc[u]+1
+  for u in S:
+       m=m+len(d[u])
+
+  comp.append((len(S),int(m/2),list(S)))
+    
+  #print("Component",comp)
+
+  ST=S
+    
+  #print("ST=",ST)
+
+  #The other components: origin must be outside ST, same treatment
+  i=1
+  while i<len(d):
+   m=0
+   while  list(d.keys())[i] not in ST:
+    a=list(d.keys())[i]
+    S=d[a]
+    S1=set([a])
+    S=S.union(S1)
+    while S > S1:
+      S1=S
+      for u in S:
+         S=S.union(d[u])
+    for u in S:
+       m=m+len(d[u])
+    comp.append((len(S),int(m/2),list(S)))
+    ST=ST.union(S)  
+   i+=1     
+  return comp
 
 def write_edge_reservoir(edge_reservoir, window_counter):
     now = datetime.datetime.now()
@@ -17,12 +145,29 @@ def write_edge_reservoir(edge_reservoir, window_counter):
         f.write(e +"\n")
     f.close()
 
+def write_components_reservoir(i, c, n, m, n_m, d, keyword):
+    print("11111")
+    print("1111222222", i, c, n, m, n_m, d, keyword)
+    now = datetime.datetime.now()
+    datetime_export = now.strftime("%Y/%m/%d %H:%M:%S")
+    if os.path.isfile("data/%s_%s_components.csv" % (now.strftime("%Y_%m_%d"), keyword)):
+        w = csv.writer(open("data/%s_%s_components.csv" % (now.strftime("%Y_%m_%d"), keyword), "a"))
+        e = (str(datetime_export), str(keyword), str(i), str(c), str(n), str(m), str(n_m), str(d))
+        w.writerow(e)
+    else:
+        w = csv.writer(open("data/%s_%s_components.csv" % (now.strftime("%Y_%m_%d"), keyword), "a"))
+        header_csv = ("Date", "Keyword", "Window", "Component", "n", "m", "n/m", "Diameter")
+        w.writerow(header_csv)
+        e = (str(datetime_export), str(keyword), str(i), str(c), str(n), str(m), str(n_m), str(d))
+        print(e)
+        w.writerow(e)
+        #f.write(e +"\n")
+        #w.close()
+
 global mt, m, mh0, il, ih, i, L, sample, rate, sample, time_init
 mt=0
 m=[]
 mh0=0
-# while mt <= int(lamb/tau):
-#    m.append(0); mt += 1
 mt=0
 #i is the index of the windows: 0,1,2,... "il" est l'index de ml et "ih" est l'index de mh
 il=0
@@ -32,14 +177,15 @@ i=0
 L=0
 time_init = 0
 sample_window_stream = []
-def reservoir_sampling_window_stream(edge, k, lamb, tau):
+def reservoir_sampling_window_stream(edge, k, lamb, tau, threshold, keyword):
     global m, mh0, L, i, sample_window_stream, time_init, tau_window, lamb_window, il, mt, ih
     if time_init == 0:
         time_init = int(edge[2])
         tau_window = time_init+tau
         lamb_window = time_init+lamb
         while mt <= int(lamb/tau):
-            m.append(0); mt += 1
+            m.append(0)
+            mt += 1
         mt=0
     else:
         pass
@@ -84,10 +230,23 @@ def reservoir_sampling_window_stream(edge, k, lamb, tau):
         print("L= ",L)
         print("Numéro réservoir",i)
         tau_window = tau_window+tau
+        comp = components(sample_window_stream)
+        comp1=sorted(comp,reverse=True)
+        c=0
+        for a in comp1:
+            n = a[0]
+            if int(n) < threshold:
+                pass
+            else:
+                m = a[1]
+                n_m = n/m
+                d = diameter(a)
+                write_components_reservoir(i, c, n, m, n_m, d, keyword)
+                c+=1            
         write_edge_reservoir(sample_window_stream, i)
-        print("il =",il)
-        print("ih =",ih)
-        print("i =",i)
+        # print("il =",il)
+        # print("ih =",ih)
+        # print("i =",i)
     if L < k:
         sample_window_stream.append(edge)
         L +=1
