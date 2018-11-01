@@ -42,6 +42,10 @@ tracking.append(input("4/5 Please enter tracking word (eg CNN): "))
 timeout = input("5/5 Please enter duration of the capture in minutes (eg 30): ")
 timeout = int(timeout)*60000
 start = int(round(time.time() * 1000))
+
+threshold = input("6/6 Please enter threshold components size for the export file (eg 5): ")
+threshold = int(threshold)
+
 print("Capture in progress")
 
 window_counter = 0
@@ -70,7 +74,7 @@ class StdOutListener(StreamListener):
 					pass
 				else:
 					c.writerow(edge)
-					window_reservoir_sampling = reservoir_sampling_window_stream(edge, window_k, window_sliding, export_time)
+					window_reservoir_sampling = reservoir_sampling_window_stream(edge, window_k, window_sliding, export_time, threshold, tracking[0])
 		if time.time()*1000 > start + timeout:
 			sys.exit('Capture terminated')
 		return True
