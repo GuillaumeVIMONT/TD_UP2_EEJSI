@@ -28,7 +28,7 @@ access_token_secret="« 
 
 This is an interactive python script, you need to specify 3 variables : 
 
-1- Window reservoir size (eg 200)
+1- Number of edges in the reservoir (eg 200)
 2- Window sliding in minutes (eg 10)
 3- Window export edges in minutes (eg 2)
 4- Traking word to capture twitter stream
