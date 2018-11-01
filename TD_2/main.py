@@ -109,4 +109,3 @@ if __name__ == '__main__':
 
 #Close the file to store edges output
 c.close()
-t.close()
