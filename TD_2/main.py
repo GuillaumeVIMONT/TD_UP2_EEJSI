@@ -22,7 +22,7 @@ print("Before start Twitter capture we need some informations")
 window_k = input("1/5 Please enter number of edges in the reservoir (eg 200): ")
 window_k = int(window_k)
 # Lamb size window reservoir
-window_sliding = input("2/5 Please enter lamb minutes(eg 10): ")
+window_sliding = input("2/5 Please enter lamb in minutes(eg 10): ")
 window_sliding = int(window_sliding)*60000
 
 # tau size window reservoir
