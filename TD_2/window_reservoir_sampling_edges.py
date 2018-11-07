@@ -145,26 +145,23 @@ def write_edge_reservoir(edge_reservoir, window_counter):
         f.write(e +"\n")
     f.close()
 
-def write_components_reservoir(i, c, n, m, n_m, d, keyword):
-    print("11111")
-    print("1111222222", i, c, n, m, n_m, d, keyword)
+def write_components_reservoir(i, c, n, m_i, n_m, d, keyword):
     now = datetime.datetime.now()
     datetime_export = now.strftime("%Y/%m/%d %H:%M:%S")
     if os.path.isfile("data/%s_%s_components.csv" % (now.strftime("%Y_%m_%d"), keyword)):
         w = csv.writer(open("data/%s_%s_components.csv" % (now.strftime("%Y_%m_%d"), keyword), "a"))
-        e = (str(datetime_export), str(keyword), str(i), str(c), str(n), str(m), str(n_m), str(d))
+        e = (str(datetime_export), str(keyword), str(i), str(c), str(n), str(m_i), str(n_m), str(d))
         w.writerow(e)
     else:
         w = csv.writer(open("data/%s_%s_components.csv" % (now.strftime("%Y_%m_%d"), keyword), "a"))
         header_csv = ("Date", "Keyword", "Window", "Component", "n", "m", "n/m", "Diameter")
         w.writerow(header_csv)
-        e = (str(datetime_export), str(keyword), str(i), str(c), str(n), str(m), str(n_m), str(d))
-        print(e)
+        e = (str(datetime_export), str(keyword), str(i), str(c), str(n), str(m_i), str(n_m), str(d))
         w.writerow(e)
         #f.write(e +"\n")
         #w.close()
 
-global mt, m, mh0, il, ih, i, L, sample, rate, sample, time_init
+global mt, m, mh0, il, ih, i, L, rate, sample_window_stream, time_init
 mt=0
 m=[]
 mh0=0
@@ -183,6 +180,7 @@ def reservoir_sampling_window_stream(edge, k, lamb, tau, threshold, keyword):
         time_init = int(edge[2])
         tau_window = time_init+tau
         lamb_window = time_init+lamb
+        rate=int(lamb/tau)
         while mt <= int(lamb/tau):
             m.append(0)
             mt += 1
@@ -235,18 +233,13 @@ def reservoir_sampling_window_stream(edge, k, lamb, tau, threshold, keyword):
         c=0
         for a in comp1:
             n = a[0]
-            if int(n) < threshold:
-                pass
-            else:
-                m = a[1]
-                n_m = n/m
+            if int(n) > int(threshold):
+                m_i = a[1]
+                n_m = n/m_i
                 d = diameter(a)
-                write_components_reservoir(i, c, n, m, n_m, d, keyword)
+                write_components_reservoir(i, c, n, m_i, n_m, d, keyword)
                 c+=1            
         write_edge_reservoir(sample_window_stream, i)
-        # print("il =",il)
-        # print("ih =",ih)
-        # print("i =",i)
     if L < k:
         sample_window_stream.append(edge)
         L +=1
