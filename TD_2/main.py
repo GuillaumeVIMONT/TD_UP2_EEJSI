@@ -9,7 +9,7 @@ import json
 from generate_graph import create_graph
 from window_reservoir_sampling_edges import reservoir_sampling_window_stream
 import math
-import csv
+# import csv
 import datetime
 from config import TwitterAuth
 import sys
@@ -36,8 +36,13 @@ else:
 	export_time = input("3/5 Your tau is not a multiple of lamb, please select a multiple of lamb: ")
 	export_time = int(export_time)*60000
 # tracking Twitter Stream
+keywords_input = input("4/5 Please enter tracking word (eg CNN) if multi keywords (eg CNN Foxnews): ")
 tracking = []
-tracking.append(input("4/5 Please enter tracking word (eg CNN): "))
+keywords_input = list(keywords_input.split(" "))
+for j in keywords_input:
+	tracking.append(str(j))
+# tracking = []
+# tracking.append(input("4/5 Please enter tracking word (eg CNN): "))
 # Timeout Twitter stream
 timeout = input("5/5 Please enter duration of the capture in minutes (eg 30): ")
 timeout = int(timeout)*60000
@@ -50,9 +55,9 @@ print("Capture in progress")
 
 window_counter = 0
 
-c = csv.writer(open("data/%s_%s_edges_full.csv" % (now.strftime("%Y_%m_%d"), tracking[0]), "a"))
-csv_header_full = ("Source", "Target", "Timestamp")
-c.writerow(csv_header_full)
+# c = csv.writer(open("data/%s_%s_edges_full.csv" % (now.strftime("%Y_%m_%d"), tracking[0]), "a"))
+# csv_header_full = ("Source", "Target", "Timestamp")
+# c.writerow(csv_header_full)
 
 global initial_time
 initial_time = 0
@@ -73,8 +78,8 @@ class StdOutListener(StreamListener):
 					remove(edge)
 					pass
 				else:
-					c.writerow(edge)
-					window_reservoir_sampling = reservoir_sampling_window_stream(edge, window_k, window_sliding, export_time, threshold, tracking[0])
+					# c.writerow(edge)
+					window_reservoir_sampling = reservoir_sampling_window_stream(edge, window_k, window_sliding, export_time, threshold, tracking)
 		if time.time()*1000 > start + timeout:
 			sys.exit('Capture terminated')
 		return True
@@ -108,4 +113,4 @@ if __name__ == '__main__':
 			pass
 
 #Close the file to store edges output
-c.close()
+# c.close()
