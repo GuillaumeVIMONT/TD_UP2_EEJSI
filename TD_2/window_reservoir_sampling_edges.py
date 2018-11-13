@@ -3,6 +3,8 @@ import time
 import datetime
 import csv
 import os.path
+# import os
+# import sys
 def diameter(first):
 
  #first=comp1[i]
@@ -145,21 +147,20 @@ def write_edge_reservoir(edge_reservoir, window_counter):
         f.write(e +"\n")
     f.close()
 
-def write_components_reservoir(i, c, n, m_i, n_m, d, keyword):
+def write_components_reservoir(i, c, n, m_i, n_m, d, keyword, mh0, mhm):
     now = datetime.datetime.now()
     datetime_export = now.strftime("%Y/%m/%d %H:%M:%S")
     if os.path.isfile("data/%s_%s_components.csv" % (now.strftime("%Y_%m_%d"), keyword)):
         w = csv.writer(open("data/%s_%s_components.csv" % (now.strftime("%Y_%m_%d"), keyword), "a"))
-        e = (str(datetime_export), str(keyword), str(i), str(c), str(n), str(m_i), str(n_m), str(d))
+        e = (str(datetime_export), str(keyword), str(i), str(c), str(n), str(m_i), str(n_m), str(d), str(mh0), str(mhm))
         w.writerow(e)
     else:
         w = csv.writer(open("data/%s_%s_components.csv" % (now.strftime("%Y_%m_%d"), keyword), "a"))
-        header_csv = ("Date", "Keyword", "Window", "Component", "n", "m", "n/m", "Diameter")
+        header_csv = ("Date", "Keyword", "Window", "Component", "n", "m", "n/m", "Diameter", "mh0", "mh0-m[0]")
         w.writerow(header_csv)
-        e = (str(datetime_export), str(keyword), str(i), str(c), str(n), str(m_i), str(n_m), str(d))
+        e = (str(datetime_export), str(keyword), str(i), str(c), str(n), str(m_i), str(n_m), str(d), str(mh0), str(mhm))
         w.writerow(e)
-        #f.write(e +"\n")
-        #w.close()
+    # w.close()
 
 global mt, m, mh0, il, ih, i, L, rate, sample_window_stream, time_init
 mt=0
@@ -227,6 +228,9 @@ def reservoir_sampling_window_stream(edge, k, lamb, tau, threshold, keyword):
         print(sample_window_stream)
         print("L= ",L)
         print("Numéro réservoir",i)
+        print("Nombre de tuple global", mh0)
+        print("Nombre de tuple dans la fenêtre", mh0-m[0])
+        mhm = mh0-m[0]
         tau_window = tau_window+tau
         comp = components(sample_window_stream)
         comp1=sorted(comp,reverse=True)
@@ -237,7 +241,7 @@ def reservoir_sampling_window_stream(edge, k, lamb, tau, threshold, keyword):
                 m_i = a[1]
                 n_m = n/m_i
                 d = diameter(a)
-                write_components_reservoir(i, c, n, m_i, n_m, d, keyword)
+                write_components_reservoir(i, c, n, m_i, n_m, d, keyword, mh0, mhm)
                 c+=1            
         write_edge_reservoir(sample_window_stream, i)
     if L < k:
