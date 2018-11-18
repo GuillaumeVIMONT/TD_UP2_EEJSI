@@ -136,15 +136,13 @@ def components(edges):
 
 def write_edge_reservoir(edge_reservoir, window_counter):
     now = datetime.datetime.now()
-    f = open("data/%s_window_reservoir_edges_%s.csv" % (now.strftime("%Y_%m_%d"), window_counter), "w")
-    header_csv = "Source, Target, Timestamp"
-    f.write(header_csv +"\n")
-    for i in edge_reservoir:
-        a = str(i[0])
-        b = str(i[1])
-        c = str(i[2])
-        e = a + ',' + b + ',' + c
-        f.write(e +"\n")
+    f = open("data/%s_window_reservoir_edges_%s.csv" % (now.strftime("%Y_%m_%d_%Hh%M"), window_counter), "a")
+    f.write("Source, Destination, Timestamp \n")
+    for edge in edge_reservoir:
+        try:
+            f.write("%s, %s, %s \n" %edge)
+        except:
+            pass
     f.close()
 
 def write_components_reservoir(i, c, n, m_i, n_m, d, keyword, mh0, mhm):
@@ -156,7 +154,7 @@ def write_components_reservoir(i, c, n, m_i, n_m, d, keyword, mh0, mhm):
         w.writerow(e)
     else:
         w = csv.writer(open("data/%s_%s_components.csv" % (now.strftime("%Y_%m_%d"), keyword), "a"))
-        header_csv = ("Date", "Keyword", "Window", "Component", "n", "m", "n/m", "Diameter", "mh0", "mh0-m[0]")
+        header_csv = ("Date", "Keyword", "Window", "Component", "n", "m", "m/n", "Diameter", "mh0", "mh0-m[0]")
         w.writerow(header_csv)
         e = (str(datetime_export), str(keyword), str(i), str(c), str(n), str(m_i), str(n_m), str(d), str(mh0), str(mhm))
         w.writerow(e)
@@ -199,7 +197,28 @@ def reservoir_sampling_window_stream(edge, k, lamb, tau, threshold, keyword):
 
     if int(edge[2]) <= tau_window:
         pass 
-    else: 
+    else:
+        #if int(edge[2]) > tau_window: 
+        i += 1
+        #print(sample_window_stream)
+        print("L= ",L)
+        print("Numéro réservoir",i)
+        print("Nombre de tuple global", mh0)
+        print("Nombre de tuple dans la fenêtre", mh0-m[0])
+        mhm = mh0-m[0]
+        tau_window = tau_window+tau
+        comp = components(sample_window_stream)
+        comp1=sorted(comp,reverse=True)
+        c=0
+        for a in comp1:
+            n = a[0]
+            if int(n) > int(threshold):
+                m_i = a[1]
+                n_m = m_i/n
+                d = diameter(a)
+                write_components_reservoir(i, c, n, m_i, n_m, d, keyword, mh0, mhm)
+                c+=1            
+        write_edge_reservoir(sample_window_stream, i)
         ih += 1
         if ih == 1:
             del m[rate]
@@ -223,27 +242,6 @@ def reservoir_sampling_window_stream(edge, k, lamb, tau, threshold, keyword):
     while int(sample_window_stream[0][2]) < tau_window-tau and L > 0:
         del sample_window_stream[0]
         L -=1
-    if int(edge[2]) > tau_window: 
-        i += 1
-        print(sample_window_stream)
-        print("L= ",L)
-        print("Numéro réservoir",i)
-        print("Nombre de tuple global", mh0)
-        print("Nombre de tuple dans la fenêtre", mh0-m[0])
-        mhm = mh0-m[0]
-        tau_window = tau_window+tau
-        comp = components(sample_window_stream)
-        comp1=sorted(comp,reverse=True)
-        c=0
-        for a in comp1:
-            n = a[0]
-            if int(n) > int(threshold):
-                m_i = a[1]
-                n_m = n/m_i
-                d = diameter(a)
-                write_components_reservoir(i, c, n, m_i, n_m, d, keyword, mh0, mhm)
-                c+=1            
-        write_edge_reservoir(sample_window_stream, i)
     if L < k:
         sample_window_stream.append(edge)
         L +=1
