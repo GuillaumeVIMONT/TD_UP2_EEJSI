@@ -22,8 +22,8 @@ def create_graph(data):
 		b=0
 	if len(hashtags_list) > 0:
 		for i in hashtags_list:
-			edge_list.append((user_screen_name, "#"+i, timestamp_ms))
+			edge_list.append(("@"+user_screen_name, "#"+i, timestamp_ms))
 	if len(user_mentions_list) > 0:
 		for i in user_mentions_list:
-			edge_list.append((user_screen_name, i, timestamp_ms))
+			edge_list.append(("@"+user_screen_name, "@"+i, timestamp_ms))
 	return edge_list
