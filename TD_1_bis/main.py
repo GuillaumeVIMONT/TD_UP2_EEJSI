@@ -35,12 +35,8 @@ print("Capture in progress")
 
 def write_edge_reservoir(edge_reservoir):
 	now = datetime.datetime.now()
-	zoozo=0
 	f = open("data/%s_window_reservoir_edges.csv" % (now.strftime("%Y_%m_%d_%Hh%M")), "a")
 	for i in edge_reservoir:
-		print(i)
-		print(zoozo)
-		zoozo+=1
 		try:
 			f.write("%s, %s, %s \n" %i)
 		except:
