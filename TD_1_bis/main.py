@@ -36,6 +36,7 @@ print("Capture in progress")
 def write_edge_reservoir(edge_reservoir):
 	now = datetime.datetime.now()
 	f = open("data/%s_window_reservoir_edges.csv" % (now.strftime("%Y_%m_%d_%Hh%M")), "a")
+	f.write("Source, Destination, Timestamp \n")
 	for i in edge_reservoir:
 		try:
 			f.write("%s, %s, %s \n" %i)
