@@ -7,7 +7,7 @@ from tweepy import Stream
 import time
 import json
 from generate_graph import create_graph
-from window_reservoir_sampling_edges import reservoir_sampling_window_stream
+from window_reservoir_sampling_edges import *
 import math
 # import csv
 import datetime
