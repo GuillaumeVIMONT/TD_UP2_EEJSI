@@ -44,21 +44,21 @@ def write_edge_reservoir(edge_reservoir):
 			pass
 	f.close()
 
-global L, sample_window_stream, counter, time_counter
+global L, sample_window_stream, global_counter, time_counter, interval_counter
 L=0
 sample_window_stream = []
-counter = 0
+global_counter = 0
+interval_counter = 0
 time_counter = (time.time()*1000)+60000
 def reservoir_sampling_window_stream(edge, k):
     global L, sample_window_stream
+    L+=1
     if L < k:
         sample_window_stream.append(edge)
-        L+=1
     else:
         j = random.randint(0, L)
         if j < k:
            sample_window_stream[j] = edge
-           L+=1
     return sample_window_stream
 
 class StdOutListener(StreamListener):
@@ -67,19 +67,21 @@ class StdOutListener(StreamListener):
     This is a basic listener that just prints received tweets to stdout.
 	"""
 	def on_data(self, data):
-		global window_k, L, counter, time_counter
-		all_data = json.loads(data)
+		global window_k, L, global_counter, time_counter, interval_counter
 		twitter_edges_graph = create_graph(data)
 		if len(twitter_edges_graph) > 0:
 			for edge in twitter_edges_graph:
-				counter+=1
+				global_counter+=1
+				interval_counter+=1
 				if tracking[0] in edge[1].lower():
 					remove(edge)
 					pass
 				else:
 					window_reservoir_sampling = reservoir_sampling_window_stream(edge, window_k)
 		if time.time()*1000 > time_counter:
-			print("nombre de tuples",counter)
+			print("nombre de tuples global", global_counter)
+			print("nombre de tuples intervalle", interval_counter)
+			interval_counter = 0
 			time_counter+=60000
 		if time.time()*1000 > start + timeout:
 			print("Nombre de tuple global", L)
