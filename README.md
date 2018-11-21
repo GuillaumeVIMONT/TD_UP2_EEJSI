@@ -67,6 +67,40 @@ After running this program, you can run gephi to play with the network graph.
 
 For more informations about Gephi, please read this page http://www.up2.fr/index.php?n=Main.Gephi
 
+
+## Part 2
+
+Open the github folder, previously downloaded
+
+Please go to the folder "TD_1"
+
+This is a basic experience to explain reservoir sampling with social edges in streaming mode.
+
+Reminder :
+
+Reservoir sampling is a family of randomized algorithms for randomly choosing a sample of k items from a list S containing n items, where n is either a very large or unknown number. Typically n is large enough that the list doesn't fit into main memory.
+
+Run script:
+
+Please open Anaconda Prompt and write:
+
+`cd path/to/the/current/folder`
+
+After it write:
+
+`python main.py`
+
+This is an interactive python script, to run this execute main.py you need to specify 3 variables :
+
+1- Please enter number of edges in the reservoir (eg 200)
+2- Please enter tracking word (eg CNN)
+3- Please enter threshold for the connected component export (eg 5)
+4- Please enter duration of the capture in minutes (eg 30)
+
+After running this program, you can run gephi to play with the network graph.
+
+For more informations about Gephi, please read this page http://www.up2.fr/index.php?n=Main.Gephi
+
 ## Part 3
 
 Please go to the folder "TD_2"
