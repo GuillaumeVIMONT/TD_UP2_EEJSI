@@ -86,7 +86,17 @@ Please open Anaconda Prompt and write:
 
 `cd path/to/the/current/folder`
 
-After it write:
+Before execute main.py please insert your key into the file config.py
+
+`consumer_key=""`
+
+`consumer_secret=""`
+
+`access_token=""`
+
+`access_token_secret=""`
+
+After it,  write:
 
 `python main.py`
 
