@@ -124,15 +124,10 @@ def comp_edges(comp1):
    compedges.append(cp)
  return compedges
 
-
-
-f = open("data/%s_window_reservoir_edges.csv" % (now.strftime("%Y_%m_%d")), "a")
-f.write("Source, Destination, Component_id\n")
-
-def write_edge_reservoir(i, comp_id):
+def write_edge_reservoir(i, time_export):
 	now = datetime.datetime.now()
-	f = open("data/%s_window_reservoir_edges.csv" % (now.strftime("%Y_%m_%d")), "a")
-	# f.write("Source, Destination, Component_id\n")
+	f = open("data/%s_window_reservoir_edges.csv" % (time_export), "a")
+	# f.write("Source, Destination \n")
 	for j in i:
 		try:
 			f.write("%s, %s \n" %j)
@@ -185,11 +180,15 @@ class StdOutListener(StreamListener):
 			comp = components(window_reservoir_sampling)
 			comp1=sorted(comp,reverse=True)
 			xx = comp_edges(comp1)
-			comp_id = 0
+			time_export = now.strftime("%Y_%m_%d_%Hh%M")
+			f = open("data/%s_window_reservoir_edges.csv" % (time_export), "a")
+			f.write("Source, Destination \n")
+			f.close()
 			for i in xx:
+				comp_counter = 0
 				if len(i) >= int(threshold):
-					write_edge_reservoir(i, comp_id)
-					comp_id+=1
+					write_edge_reservoir(i, time_export)
+					comp_counter+=1
 			# print("Edges of each component",xx)
 			sys.exit('Capture terminated')
 		return True
