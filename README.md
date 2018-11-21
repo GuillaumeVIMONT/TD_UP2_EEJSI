@@ -35,7 +35,7 @@ Direct download => https://github.com/GuillaumeVIMONT/TD_UP2_EEJSI/archive/maste
 
 Open the github folder, previously downloaded
 
-Please go to the folder "TD_1"
+Please go to the folder "TD_0"
 
 This is a basic experience to explain reservoir sampling with social edges in offline mode.
 
@@ -67,7 +67,7 @@ After running this program, you can run gephi to play with the network graph.
 
 For more informations about Gephi, please read this page http://www.up2.fr/index.php?n=Main.Gephi
 
-## Part 2
+## Part 3
 
 Please go to the folder "TD_2"
 
@@ -131,7 +131,7 @@ After running this program, you can run gephi to play with the network graph.
 For more informations about Gephi, please read this page http://www.up2.fr/index.php?n=Main.Gephi
 
 
-## Part 3
+## Part 4
 
 Please go to the folder "TD_3"
 
