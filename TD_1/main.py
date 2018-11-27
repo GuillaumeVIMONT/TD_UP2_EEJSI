@@ -125,7 +125,6 @@ def comp_edges(comp1):
  return compedges
 
 def write_edge_reservoir(i, time_export):
-	now = datetime.datetime.now()
 	f = open("data/%s_window_reservoir_edges.csv" % (time_export), "a")
 	# f.write("Source, Destination \n")
 	for j in i:
@@ -175,20 +174,28 @@ class StdOutListener(StreamListener):
 			interval_counter = 0
 			time_counter+=60000
 		if time.time()*1000 > start + timeout:
-			print("Nombre de tuple global", L)
+			#print("Nombre de tuple global", L)
 			print("Taille du réservoir", len(window_reservoir_sampling))
 			comp = components(window_reservoir_sampling)
-			comp1=sorted(comp,reverse=True)
+			comp1 = sorted(comp, reverse=True)
+			print(comp1)
 			xx = comp_edges(comp1)
+			now = datetime.datetime.now()
 			time_export = now.strftime("%Y_%m_%d_%Hh%M")
 			f = open("data/%s_window_reservoir_edges.csv" % (time_export), "a")
 			f.write("Source, Target\n")
 			f.close()
+			index = 0
 			for i in comp1:
-				index = 0
 				if int(i[0]) >= int(threshold):
-					write_edge_reservoir(xx[index], time_export)
+					print(i)
+					try:
+						write_edge_reservoir(xx[index], time_export)
+					except:
+						pass
 					index+=1
+				else:
+					break
 			sys.exit('Capture terminated')
 		return True
 
@@ -207,7 +214,7 @@ if __name__ == '__main__':
 			auth = OAuthHandler(TwitterAuth.consumer_key, TwitterAuth.consumer_secret)
 			auth.set_access_token(TwitterAuth.access_token, TwitterAuth.access_token_secret)
 			twitterStream = Stream(auth, l)
-			twitterStream.filter(track=tracking, stall_warnings=True)
+			twitterStream.filter(track=tracking, stall_warnings=False)
 
 		except KeyboardInterrupt:
 			#User pressed ctrl+c or cmd+c -- get ready to exit the program
