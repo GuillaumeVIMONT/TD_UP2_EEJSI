@@ -130,7 +130,7 @@ def write_edge_reservoir(i, time_export):
 	# f.write("Source, Destination \n")
 	for j in i:
 		try:
-			f.write("%s, %s \n" %j)
+			f.write("%s, %s\n" %j)
 		except:
 			pass
 	f.close()
@@ -182,14 +182,13 @@ class StdOutListener(StreamListener):
 			xx = comp_edges(comp1)
 			time_export = now.strftime("%Y_%m_%d_%Hh%M")
 			f = open("data/%s_window_reservoir_edges.csv" % (time_export), "a")
-			f.write("Source, Destination \n")
+			f.write("Source, Target\n")
 			f.close()
-			for i in xx:
-				comp_counter = 0
-				if len(i) >= int(threshold):
-					write_edge_reservoir(i, time_export)
-					comp_counter+=1
-			# print("Edges of each component",xx)
+			for i in comp1:
+				index = 0
+				if int(i[0]) >= int(threshold):
+					write_edge_reservoir(xx[index], time_export)
+					index+=1
 			sys.exit('Capture terminated')
 		return True
 
