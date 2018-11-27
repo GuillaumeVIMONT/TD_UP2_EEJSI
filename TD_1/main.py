@@ -188,7 +188,6 @@ class StdOutListener(StreamListener):
 			index = 0
 			for i in comp1:
 				if int(i[0]) >= int(threshold):
-					print(i)
 					try:
 						write_edge_reservoir(xx[index], time_export)
 					except:
