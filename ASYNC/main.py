@@ -156,7 +156,6 @@ async def consume(queue):
             # Notify the queue that the item has been processed
             for edge in twitter_edges_graph:
                 if tracking[0] in edge[1].lower():
-                    remove(edge)
                     pass
                 else:
                     global_counter+=1
