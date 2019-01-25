@@ -164,7 +164,6 @@ class StdOutListener(StreamListener):
 				global_counter+=1
 				interval_counter+=1
 				if tracking[0] in edge[1].lower():
-					remove(edge)
 					pass
 				else:
 					window_reservoir_sampling = reservoir_sampling_window_stream(edge, window_k)
